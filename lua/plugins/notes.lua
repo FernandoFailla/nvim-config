@@ -48,7 +48,7 @@ return {
         workspaces = {
           {
             name = 'notes',
-            path = '~/notes',
+            path = '~/ObsidianVaults/organizacao/',
           },
         },
         -- Optional, for templates (see below).

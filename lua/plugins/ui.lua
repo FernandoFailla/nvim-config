@@ -439,10 +439,10 @@ return {
         editor_only_render_when_focused = false,
         window_overlap_clear_enabled = true,
         tmux_show_only_in_active_window = true,
-        max_width = nil,
-        max_height = nil,
-        max_width_window_percentage = nil,
-        max_height_window_percentage = 30,
+        max_width = 100,
+        max_height = 24,
+        max_width_window_percentage = math.huge,
+        max_height_window_percentage = math.huge,
         kitty_method = 'normal',
       }
 

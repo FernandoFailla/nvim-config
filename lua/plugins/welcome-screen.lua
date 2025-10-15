@@ -1,37 +1,42 @@
 return {
-  -- dashboard to greet
-  {
-    'goolord/alpha-nvim',
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
-    config = function()
-      local alpha = require 'alpha'
-      local dashboard = require 'alpha.themes.dashboard'
-
-      -- Set header
-      -- dashboard.section.header.val = {}
-
-      -- Set menu
-      dashboard.section.buttons.val = {
-        dashboard.button('e', '  > New file', ':ene <BAR> startinsert <CR>'),
-        dashboard.button('f', '󰈞  > Find file', ':Telescope find_files<CR>'),
-        dashboard.button('r', '  > Recent', ':Telescope oldfiles<CR>'),
-        dashboard.button('s', '  > Settings', ':e $MYVIMRC | :cd %:p:h<cr>'),
-        dashboard.button('q', '󰅚  > Quit NVIM', ':qa<CR>'),
-      }
-
-      local fortune = require 'alpha.fortune'
-      dashboard.section.footer.val = fortune {
-        fortune_list = {
-          { 'You otter be proud of yourself!', '', '— 🦦' },
-          { 'Hello from the otter slide!', '', '— Otterdele' },
-          { 'To otter space!', '', '— 🦦' },
-          { "What if I say I'm not like the otters?", '', '— Foo Fighters' },
-          { 'Nothing is im-paw-sible 🐾', '', '— 🐕' },
+  "folke/snacks.nvim",
+  -- A tabela 'keys' é um recurso do lazy.nvim para definir atalhos
+  -- que só são ativados quando o plugin é carregado.
+  -- 'opts' agora contém apenas as opções específicas do snacks.nvim
+  opts = {
+    picker = { enabled = true },
+    dashboard = {
+      enabled = true,
+      preset = {
+        header = [[
+███████╗███████╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗
+██╔════╝██╔════╝██╔════╝██╔═══██╗██║   ██║██║████╗ ████║
+█████╗  █████╗  █████╗  ██║   ██║██║   ██║██║██╔████╔██║
+██╔══╝  ██╔══╝  ██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║
+██║     ███████╗██║     ╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║
+╚═╝     ╚══════╝╚═╝      ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝]]
+      },
+      sections = {
+        {
+          pane = 1,
+          {
+            section = "terminal",
+            cmd = "ascii-image-converter ~/.config/nvim/imgs/edward.jpg -C -b --threshold 80 -d 60,20",
+            height = 17,
+            padding = 1,
+          },
+          { section = "header", header = "teste", padding = 1 },
         },
-      }
-
-      -- Send config to alpha
-      alpha.setup(dashboard.opts)
-    end,
+        { section = "recent_files", gap = 1, padding = 1, pane = 2 },
+        { section = "keys", gap = 1, padding = 1, pane = 2 },
+        { section = "startup", padding = 1, pane = 2 },
+      },
+    },
+    notifier = {
+      enabled = true,
+      timeout = 3000,
+    },
+    -- A configuração do terminal dentro de 'opts' pode ficar vazia
+    -- pois os atalhos estão sendo cuidados pelo lazy.nvim
   },
 }

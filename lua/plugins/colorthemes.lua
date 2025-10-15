@@ -1,4 +1,23 @@
 return {
+  {
+   "webhooked/kanso.nvim",
+   lazy = false,
+   enabled = true,
+   priority = 100,
+   config = function()
+      require("kanso").setup({
+        theme = "zen"
+      })
+     vim.cmd.colorscheme 'kanso-zen'
+     vim.api.nvim_create_autocmd("ColorScheme", {
+       pattern = "*",
+       callback = function()
+         vim.api.nvim_set_hl(0, "SnacksTerminal", { bg = "none", nocombine = true })
+         vim.api.nvim_set_hl(0, "SnacksPickerBorder", { fg = "#316c71", bg = "none", nocombine = true })
+       end,
+     })
+    end,
+  },
   { 'webhooked/oscura.nvim', enabled = true, lazy = false, priority = 1000, opts = {} },
   { 'Mofiqul/vscode.nvim', enabled = true, lazy = false, priority = 1000, opts = {} },
   { 'slugbyte/lackluster.nvim', enabled = true, lazy = false, priority = 1000, opts = {} },
@@ -61,7 +80,7 @@ return {
   -- color html colors
   {
     'NvChad/nvim-colorizer.lua',
-    enabled = true,
+    enabled = false,
     opts = {
       filetypes = { '*' },
       user_default_options = {
