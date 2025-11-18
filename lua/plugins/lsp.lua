@@ -41,9 +41,6 @@ return {
       { 'folke/neoconf.nvim', opts = {}, enabled = false },
     },
     config = function()
-      local lspconfig = require 'lspconfig'
-      local util = require 'lspconfig.util'
-
       require('mason').setup {
         ensure_installed = {
           'lua-language-server',
@@ -99,11 +96,6 @@ return {
         end,
       })
 
-      local lsp_flags = {
-        allow_incremental_sync = true,
-        debounce_text_changes = 150,
-      }
-
       -- local capabilities = vim.lsp.protocol.make_client_capabilities()
       -- capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
       -- capabilities.textDocument.completion.completionItem.snippetSupport = true
@@ -113,16 +105,18 @@ return {
       -- $home/.config/marksman/config.toml :
       -- [core]
       -- markdown.file_extensions = ["md", "markdown", "qmd"]
-      -- lspconfig.marksman.setup {
-      --   capabilities = capabilities,
+      -- vim.lsp.config.marksman = {
+      --   cmd = { 'marksman', 'server' },
       --   filetypes = { 'markdown', 'quarto' },
-      --   root_dir = util.root_pattern('.git', '.marksman.toml', '_quarto.yml'),
+      --   root_markers = { '.git', '.marksman.toml', '_quarto.yml' },
+      --   capabilities = capabilities,
       -- }
 
-      lspconfig.r_language_server.setup {
-        capabilities = capabilities,
-        flags = lsp_flags,
+      vim.lsp.config.r_language_server = {
+        cmd = { 'R', '--slave', '-e', 'languageserver::run()' },
         filetypes = { 'r', 'rmd', 'rmarkdown' }, -- not directly using it for quarto (as that is handled by otter and often contains more languanges than just R)
+        root_markers = { '.git' },
+        capabilities = capabilities,
         settings = {
           r = {
             lsp = {
@@ -132,29 +126,39 @@ return {
         },
       }
 
-      lspconfig.cssls.setup {
+      vim.lsp.config.cssls = {
+        cmd = { 'vscode-css-language-server', '--stdio' },
+        filetypes = { 'css', 'scss', 'less' },
+        root_markers = { 'package.json', '.git' },
         capabilities = capabilities,
-        flags = lsp_flags,
       }
 
-      -- lspconfig.html.setup {
+      -- vim.lsp.config.html = {
+      --   cmd = { 'vscode-html-language-server', '--stdio' },
+      --   filetypes = { 'html' },
+      --   root_markers = { 'package.json', '.git' },
       --   capabilities = capabilities,
-      --   flags = lsp_flags,
       -- }
 
-      -- lspconfig.emmet_language_server.setup {
+      -- vim.lsp.config.emmet_language_server = {
+      --   cmd = { 'emmet-language-server', '--stdio' },
+      --   filetypes = { 'html', 'css', 'scss', 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
+      --   root_markers = { '.git' },
       --   capabilities = capabilities,
-      --   flags = lsp_flags,
       -- }
 
-      lspconfig.svelte.setup {
+      vim.lsp.config.svelte = {
+        cmd = { 'svelteserver', '--stdio' },
+        filetypes = { 'svelte' },
+        root_markers = { 'package.json', '.git' },
         capabilities = capabilities,
-        flags = lsp_flags,
       }
 
-      lspconfig.yamlls.setup {
+      vim.lsp.config.yamlls = {
+        cmd = { 'yaml-language-server', '--stdio' },
+        filetypes = { 'yaml', 'yaml.docker-compose' },
+        root_markers = { '.git' },
         capabilities = capabilities,
-        flags = lsp_flags,
         settings = {
           yaml = {
             schemaStore = {
@@ -165,25 +169,32 @@ return {
         },
       }
 
-      lspconfig.jsonls.setup {
+      vim.lsp.config.jsonls = {
+        cmd = { 'vscode-json-language-server', '--stdio' },
+        filetypes = { 'json', 'jsonc' },
+        root_markers = { '.git' },
         capabilities = capabilities,
-        flags = lsp_flags,
       }
 
-      lspconfig.texlab.setup {
+      vim.lsp.config.texlab = {
+        cmd = { 'texlab' },
+        filetypes = { 'tex', 'plaintex', 'bib' },
+        root_markers = { '.latexmkrc', '.git' },
         capabilities = capabilities,
-        flags = lsp_flags,
       }
 
-      lspconfig.dotls.setup {
+      vim.lsp.config.dotls = {
+        cmd = { 'dot-language-server', '--stdio' },
+        filetypes = { 'dot', 'gv' },
+        root_markers = { '.git' },
         capabilities = capabilities,
-        flags = lsp_flags,
       }
 
-      lspconfig.ts_ls.setup {
-        capabilities = capabilities,
-        flags = lsp_flags,
+      vim.lsp.config.ts_ls = {
+        cmd = { 'typescript-language-server', '--stdio' },
         filetypes = { 'js', 'javascript', 'typescript', 'ojs' },
+        root_markers = { 'package.json', 'tsconfig.json', '.git' },
+        capabilities = capabilities,
       }
 
       local function get_quarto_resource_path()
@@ -211,9 +222,11 @@ return {
         table.insert(lua_plugin_paths, resource_path .. '/lua-plugin/plugin.lua')
       end
 
-      lspconfig.lua_ls.setup {
+      vim.lsp.config.lua_ls = {
+        cmd = { 'lua-language-server' },
+        filetypes = { 'lua' },
+        root_markers = { '.luarc.json', '.luarc.jsonc', '.luacheckrc', '.stylua.toml', 'stylua.toml', 'selene.toml', 'selene.yml', '.git' },
         capabilities = capabilities,
-        flags = lsp_flags,
         settings = {
           Lua = {
             completion = {
@@ -240,44 +253,56 @@ return {
         },
       }
 
-      lspconfig.vimls.setup {
+      vim.lsp.config.vimls = {
+        cmd = { 'vim-language-server', '--stdio' },
+        filetypes = { 'vim' },
+        root_markers = { '.git' },
         capabilities = capabilities,
-        flags = lsp_flags,
       }
 
-      lspconfig.julials.setup {
+      vim.lsp.config.julials = {
+        cmd = { 'julia', '--startup-file=no', '--history-file=no', '-e', 'using LanguageServer; runserver()' },
+        filetypes = { 'julia' },
+        root_markers = { 'Project.toml', '.git' },
         capabilities = capabilities,
-        flags = lsp_flags,
       }
 
-      lspconfig.bashls.setup {
-        capabilities = capabilities,
-        flags = lsp_flags,
+      vim.lsp.config.bashls = {
+        cmd = { 'bash-language-server', 'start' },
         filetypes = { 'sh', 'bash' },
+        root_markers = { '.git' },
+        capabilities = capabilities,
       }
 
       -- Add additional languages here.
       -- See `:h lspconfig-all` for the configuration.
       -- Like e.g. Haskell:
-      -- lspconfig.hls.setup {
-      --   capabilities = capabilities,
-      --   flags = lsp_flags,
+      -- vim.lsp.config.hls = {
+      --   cmd = { 'haskell-language-server-wrapper', '--lsp' },
       --   filetypes = { 'haskell', 'lhaskell', 'cabal' },
+      --   root_markers = { 'hie.yaml', 'stack.yaml', 'cabal.project', '*.cabal', 'package.yaml', '.git' },
+      --   capabilities = capabilities,
       -- }
 
-      lspconfig.clangd.setup {
+      vim.lsp.config.clangd = {
+        cmd = { 'clangd' },
+        filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'proto' },
+        root_markers = { '.clangd', '.clang-tidy', '.clang-format', 'compile_commands.json', 'compile_flags.txt', 'configure.ac', '.git' },
         capabilities = capabilities,
-        flags = lsp_flags,
       }
 
-      lspconfig.rust_analyzer.setup {
+      vim.lsp.config.rust_analyzer = {
+        cmd = { 'rust-analyzer' },
+        filetypes = { 'rust' },
+        root_markers = { 'Cargo.toml', 'rust-project.json', '.git' },
         capabilities = capabilities,
-        flags = lsp_flags,
       }
 
-      -- lspconfig.ruff_lsp.setup {
+      -- vim.lsp.config.ruff_lsp = {
+      --   cmd = { 'ruff-lsp' },
+      --   filetypes = { 'python' },
+      --   root_markers = { 'pyproject.toml', 'setup.py', 'setup.cfg', 'requirements.txt', 'Pipfile', '.git' },
       --   capabilities = capabilities,
-      --   flags = lsp_flags,
       -- }
 
       -- See https://github.com/neovim/neovim/issues/23291
@@ -290,9 +315,11 @@ return {
       end
       capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = false
 
-      lspconfig.pyright.setup {
+      vim.lsp.config.pyright = {
+        cmd = { 'pyright-langserver', '--stdio' },
+        filetypes = { 'python' },
+        root_markers = { '.git', 'setup.py', 'setup.cfg', 'pyproject.toml', 'requirements.txt' },
         capabilities = capabilities,
-        flags = lsp_flags,
         settings = {
           python = {
             analysis = {
@@ -302,9 +329,6 @@ return {
             },
           },
         },
-        root_dir = function(fname)
-          return util.root_pattern('.git', 'setup.py', 'setup.cfg', 'pyproject.toml', 'requirements.txt')(fname)
-        end,
       }
     end,
   },

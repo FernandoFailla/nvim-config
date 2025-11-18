@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+* Migrate LSP configuration from deprecated `require('lspconfig')` to native Neovim 0.11+ `vim.lsp.config` API
+
 ## [3.13.0](https://github.com/jmbuhr/nvim-config/compare/v3.12.0...v3.13.0) (2025-04-06)
 
 
