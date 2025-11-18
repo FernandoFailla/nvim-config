@@ -277,6 +277,10 @@ local function new_terminal_python()
 end
 
 local function new_terminal_r()
+  new_terminal 'radian'
+end
+
+local function new_terminal_r_vanilla()
   new_terminal 'R --no-save'
 end
 
@@ -291,6 +295,15 @@ end
 local function new_terminal_shell()
   new_terminal '$SHELL'
 end
+
+-- Create user commands for R terminals
+vim.api.nvim_create_user_command('Radian', function()
+  new_terminal_r()
+end, { desc = 'Open Radian terminal' })
+
+vim.api.nvim_create_user_command('R', function()
+  new_terminal_r_vanilla()
+end, { desc = 'Open vanilla R terminal' })
 
 local function get_otter_symbols_lang()
   local otterkeeper = require 'otter.keeper'
@@ -333,7 +346,8 @@ wk.add({
     { '<leader>cj', new_terminal_julia, desc = 'new [j]ulia terminal' },
     { '<leader>cn', new_terminal_shell, desc = '[n]ew terminal with shell' },
     { '<leader>cp', new_terminal_python, desc = 'new [p]ython terminal' },
-    { '<leader>cr', new_terminal_r, desc = 'new [R] terminal' },
+    { '<leader>cr', new_terminal_r, desc = 'new [R]adian terminal' },
+    { '<leader>cR', new_terminal_r_vanilla, desc = 'new vanilla [R] terminal' },
     { '<leader>d', group = '[d]ebug' },
     { '<leader>dt', group = '[t]est' },
     { '<leader>e', group = '[e]dit' },

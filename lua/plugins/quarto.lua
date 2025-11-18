@@ -69,6 +69,8 @@ return {
       vim.g.slime_target = 'neovim'
       vim.g.slime_no_mappings = true
       vim.g.slime_python_ipython = 1
+      -- Better paste support for Radian
+      vim.g.slime_bracketed_paste = 1
     end,
     config = function()
       vim.g.slime_input_pid = false
@@ -78,7 +80,8 @@ return {
 
       local function mark_terminal()
         local job_id = vim.b.terminal_job_id
-        vim.print('job_id: ' .. job_id)
+        local term_name = vim.b.term_title or 'unknown'
+        vim.notify('Slime connected to: ' .. term_name .. ' (job_id: ' .. job_id .. ')', vim.log.levels.INFO)
       end
 
       local function set_terminal()

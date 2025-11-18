@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+### Added
+
+* **Radian R REPL integration**: Enhanced R console with syntax highlighting, autocompletion, and vi keybindings
+  - New keybind `<leader>cr` to open Radian terminal (default R REPL)
+  - New keybind `<leader>cR` to open vanilla R terminal (fallback option)
+  - New commands `:Radian` and `:R` for opening respective terminals
+  - Configured `~/.radian_profile` with optimal settings for Neovim integration
+  - Added `slime_bracketed_paste` for better code execution via vim-slime
+  - Enhanced `mark_terminal()` function with informative notifications
+  - Updated AGENTS.md with Radian documentation and usage instructions
+
 ### Changed
 
 * Migrate LSP configuration from deprecated `require('lspconfig')` to native Neovim 0.11+ `vim.lsp.config` API
