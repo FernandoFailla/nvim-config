@@ -12,6 +12,10 @@
   - Added `slime_bracketed_paste` for better code execution via vim-slime
   - Enhanced `mark_terminal()` function with informative notifications
   - Updated AGENTS.md with Radian documentation and usage instructions
+* **Terminal auto-scroll**: Automatically scroll terminal buffers to show latest output
+  - Terminal buffers now automatically scroll to bottom when entering them
+  - Ensures latest command output is always visible without manual scrolling
+  - Configured in `lua/config/autocommands.lua` with `BufEnter` and `TermEnter` events
 
 ### Changed
 

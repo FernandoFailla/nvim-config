@@ -18,6 +18,16 @@ vim.api.nvim_create_autocmd({ 'TermOpen' }, {
     vim.cmd.setlocal 'nonumber'
     vim.wo.signcolumn = 'no'
     set_terminal_keymaps()
+    -- Enable auto-scroll for terminal buffers
+    vim.opt_local.scrolloff = 0
+  end,
+})
+
+-- Auto-scroll terminal to bottom when entering terminal buffer
+vim.api.nvim_create_autocmd({ 'BufEnter', 'TermEnter' }, {
+  pattern = { 'term://*' },
+  callback = function()
+    vim.cmd 'normal! G'
   end,
 })
 
