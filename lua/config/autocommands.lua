@@ -18,16 +18,24 @@ vim.api.nvim_create_autocmd({ 'TermOpen' }, {
     vim.cmd.setlocal 'nonumber'
     vim.wo.signcolumn = 'no'
     set_terminal_keymaps()
-    -- Enable auto-scroll for terminal buffers
-    vim.opt_local.scrolloff = 0
   end,
 })
 
--- Auto-scroll terminal to bottom when entering terminal buffer
+-- Auto-scroll R terminal to bottom when entering (Radian and vanilla R only)
+-- Also enable bracketed paste for R terminals
 vim.api.nvim_create_autocmd({ 'BufEnter', 'TermEnter' }, {
   pattern = { 'term://*' },
   callback = function()
-    vim.cmd 'normal! G'
+    -- Only auto-scroll if this is an R terminal
+    if vim.b.is_r_terminal then
+      vim.opt_local.scrolloff = 0
+      vim.cmd 'normal! G'
+      -- Enable bracketed paste for R terminals (Radian needs this)
+      vim.g.slime_bracketed_paste = 1
+    else
+      -- Disable bracketed paste for non-R terminals (e.g., IPython)
+      vim.g.slime_bracketed_paste = 0
+    end
   end,
 })
 

@@ -9,13 +9,21 @@
   - New keybind `<leader>cR` to open vanilla R terminal (fallback option)
   - New commands `:Radian` and `:R` for opening respective terminals
   - Configured `~/.radian_profile` with optimal settings for Neovim integration
-  - Added `slime_bracketed_paste` for better code execution via vim-slime
+  - Bracketed paste enabled only for R terminals (Radian needs this for multi-line code)
   - Enhanced `mark_terminal()` function with informative notifications
   - Updated AGENTS.md with Radian documentation and usage instructions
-* **Terminal auto-scroll**: Automatically scroll terminal buffers to show latest output
-  - Terminal buffers now automatically scroll to bottom when entering them
+* **R terminal auto-scroll**: Automatically scroll R terminal buffers to show latest output
+  - R terminal buffers (Radian and vanilla R) now automatically scroll to bottom when entering them
   - Ensures latest command output is always visible without manual scrolling
-  - Configured in `lua/config/autocommands.lua` with `BufEnter` and `TermEnter` events
+  - Other terminals (Python, IPython, Julia, Shell) maintain default behavior
+  - Configured in `lua/config/autocommands.lua` with buffer-specific flag `is_r_terminal`
+
+### Fixed
+
+* **IPython code execution**: Disabled bracketed paste for non-R terminals to fix garbled output
+  - IPython terminal now sends clean code without escape sequences (`0~`, `1~`, etc.)
+  - Bracketed paste is dynamically enabled/disabled based on terminal type
+  - Fixes conflict between vim-slime bracketed paste and IPython's `%cpaste` mechanism
 
 ### Changed
 

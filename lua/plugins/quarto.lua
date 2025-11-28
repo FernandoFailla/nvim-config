@@ -69,8 +69,8 @@ return {
       vim.g.slime_target = 'neovim'
       vim.g.slime_no_mappings = true
       vim.g.slime_python_ipython = 1
-      -- Better paste support for Radian
-      vim.g.slime_bracketed_paste = 1
+      -- Disable bracketed paste by default (will be enabled per-terminal)
+      vim.g.slime_bracketed_paste = 0
     end,
     config = function()
       vim.g.slime_input_pid = false

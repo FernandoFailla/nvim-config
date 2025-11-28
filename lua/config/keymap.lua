@@ -278,10 +278,14 @@ end
 
 local function new_terminal_r()
   new_terminal 'radian'
+  -- Mark this buffer as an R terminal for auto-scroll
+  vim.b.is_r_terminal = true
 end
 
 local function new_terminal_r_vanilla()
   new_terminal 'R --no-save'
+  -- Mark this buffer as an R terminal for auto-scroll
+  vim.b.is_r_terminal = true
 end
 
 local function new_terminal_ipython()
