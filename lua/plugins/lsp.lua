@@ -330,6 +330,25 @@ return {
           },
         },
       }
+
+      -- Enable all configured LSP servers (required in Neovim 0.11+)
+      vim.lsp.enable {
+        'r_language_server',
+        'cssls',
+        'svelte',
+        'yamlls',
+        'jsonls',
+        'texlab',
+        'dotls',
+        'ts_ls',
+        'lua_ls',
+        'vimls',
+        'julials',
+        'bashls',
+        'clangd',
+        'rust_analyzer',
+        'pyright',
+      }
     end,
   },
 }
