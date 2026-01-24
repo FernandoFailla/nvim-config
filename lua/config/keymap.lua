@@ -280,16 +280,22 @@ local function new_terminal_r()
   new_terminal 'radian'
   -- Mark this buffer as an R terminal for auto-scroll
   vim.b.is_r_terminal = true
+  -- Enable bracketed paste globally for Radian
+  vim.g.slime_bracketed_paste = 1
 end
 
 local function new_terminal_r_vanilla()
   new_terminal 'R --no-save'
   -- Mark this buffer as an R terminal for auto-scroll
   vim.b.is_r_terminal = true
+  -- Enable bracketed paste globally for R
+  vim.g.slime_bracketed_paste = 1
 end
 
 local function new_terminal_ipython()
   new_terminal 'ipython --no-confirm-exit --no-autoindent'
+  -- Disable bracketed paste for IPython (uses %cpaste instead)
+  vim.g.slime_bracketed_paste = 0
 end
 
 local function new_terminal_julia()

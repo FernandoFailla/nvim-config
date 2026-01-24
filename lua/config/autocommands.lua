@@ -22,7 +22,6 @@ vim.api.nvim_create_autocmd({ 'TermOpen' }, {
 })
 
 -- Auto-scroll R terminal to bottom when entering (Radian and vanilla R only)
--- Also enable bracketed paste for R terminals
 -- Note: Only BufEnter is used (not TermEnter) to avoid "Can't re-enter normal mode from terminal mode" error
 vim.api.nvim_create_autocmd({ 'BufEnter' }, {
   pattern = { 'term://*' },
@@ -31,11 +30,6 @@ vim.api.nvim_create_autocmd({ 'BufEnter' }, {
     if vim.b.is_r_terminal then
       vim.opt_local.scrolloff = 0
       vim.cmd 'normal! G'
-      -- Enable bracketed paste for R terminals (Radian needs this)
-      vim.g.slime_bracketed_paste = 1
-    else
-      -- Disable bracketed paste for non-R terminals (e.g., IPython)
-      vim.g.slime_bracketed_paste = 0
     end
   end,
 })
