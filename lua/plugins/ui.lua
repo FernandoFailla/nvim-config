@@ -261,7 +261,7 @@ return {
     'nvim-tree/nvim-tree.lua',
     enabled = true,
     keys = {
-      { '<leader>ft', ':NvimTreeToggle<cr>', desc = 'toggle file [t]ree' },
+      { '<c-b>', ':NvimTreeToggle<cr>', desc = 'toggle file tree' },
     },
     config = function()
       require('nvim-tree').setup {
