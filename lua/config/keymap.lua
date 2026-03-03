@@ -59,19 +59,25 @@ nmap('Q', '<Nop>')
 --- TODO: incorpoarate this into quarto-nvim plugin
 --- such that QuartoSend functions get the same capabilities
 --- TODO: figure out bracketed paste for reticulate python repl.
+
+local function init_molten()
+  QuartoConfig.codeRunner.default_method = 'molten'
+  vim.cmd [[MoltenInit]]
+end
+
+local function deinit_molten()
+  QuartoConfig.codeRunner.default_method = 'slime'
+  vim.cmd [[MoltenDeinit]]
+end
+
 local function send_cell()
-  local has_molten, molten_status = pcall(require, 'molten.status')
-  local molten_works = false
-  local molten_active = ''
-  if has_molten then
-    molten_works, molten_active = pcall(molten_status.kernels)
-  end
-  if molten_works and molten_active ~= vim.NIL and molten_active ~= '' then
-    molten_active = molten_status.initialized()
-  end
-  if molten_active ~= vim.NIL and molten_active ~= '' and molten_status.kernels() ~= 'Molten' then
-    vim.cmd.QuartoSend()
-    return
+  local ok, molten_status = pcall(require, 'molten.status')
+  if ok then
+    local initialized = molten_status.initialized()
+    if initialized ~= '' and initialized ~= vim.NIL then
+      vim.cmd.QuartoSend()
+      return
+    end
   end
 
   if vim.b['quarto_is_r_mode'] == nil then
@@ -439,6 +445,13 @@ wk.add({
     { '<leader>qp', ":lua require'quarto'.quartoPreview()<cr>", desc = '[p]review' },
     { '<leader>qu', ":lua require'quarto'.quartoUpdatePreview()<cr>", desc = '[u]pdate preview' },
     { '<leader>qq', ":lua require'quarto'.quartoClosePreview()<cr>", desc = '[q]uiet preview' },
+    { '<leader>m', group = '[m]olten' },
+    { '<leader>mi', init_molten, desc = '[i]nitialize molten' },
+    { '<leader>md', deinit_molten, desc = '[d]einit molten' },
+    { '<leader>mp', ':MoltenImagePopup<CR>', desc = 'image [p]opup' },
+    { '<leader>mb', ':MoltenOpenInBrowser<CR>', desc = 'open in [b]rowser' },
+    { '<leader>mh', ':MoltenHideOutput<CR>', desc = '[h]ide output' },
+    { '<leader>ms', ':noautocmd MoltenEnterOutput<CR>', desc = '[s]how/enter output' },
     { '<leader>qr', group = '[r]un' },
     { '<leader>qra', ':QuartoSendAll<cr>', desc = 'run [a]ll' },
     { '<leader>qrb', ':QuartoSendBelow<cr>', desc = 'run [b]elow' },
