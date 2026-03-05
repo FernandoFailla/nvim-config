@@ -16,7 +16,27 @@ vim.api.nvim_create_autocmd({ 'TermOpen' }, {
   pattern = { '*' },
   callback = function(_)
     vim.cmd.setlocal 'nonumber'
+    vim.cmd.setlocal 'norelativenumber'
+    vim.opt_local.cursorline = false
+    vim.opt_local.list = false
+
+    -- minimal terminal: subtle background, no winbar, clean look
+    local term_bg = '#0d1117'
+    local ns = vim.api.nvim_create_namespace 'terminal_bg'
+    vim.api.nvim_set_hl(ns, 'Normal', { bg = term_bg })
+    vim.api.nvim_set_hl(ns, 'EndOfBuffer', { fg = term_bg, bg = term_bg })
+    vim.api.nvim_set_hl(ns, 'SignColumn', { bg = term_bg })
+    vim.api.nvim_set_hl(ns, 'FoldColumn', { bg = term_bg })
+    vim.api.nvim_set_hl(ns, 'WinSeparator', { fg = '#1c1e25', bg = 'NONE' })
+    vim.api.nvim_win_set_hl_ns(0, ns)
+
+    -- left padding via foldcolumn (acts as visual margin)
     vim.wo.signcolumn = 'no'
+    vim.wo.foldcolumn = '1'
+
+    -- no winbar for clean minimal look
+    vim.wo.winbar = nil
+
     set_terminal_keymaps()
   end,
 })
@@ -42,5 +62,20 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
   callback = function()
     vim.highlight.on_yank()
+  end,
+})
+
+-- Hide tabline (bufferline) on dashboard, restore on other buffers
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'snacks_dashboard',
+  callback = function()
+    vim.opt.showtabline = 0
+  end,
+})
+vim.api.nvim_create_autocmd('BufUnload', {
+  callback = function()
+    if vim.bo.filetype == 'snacks_dashboard' then
+      vim.opt.showtabline = 2
+    end
   end,
 })

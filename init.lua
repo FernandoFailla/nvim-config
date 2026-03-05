@@ -20,6 +20,9 @@ require 'config.autocommands'
 require 'config.redir'
 
 vim.cmd.colorscheme 'kanso'
-vim.api.nvim_set_hl(0, 'TermCursor', { fg = '#A6E3A1', bg = '#A6E3A1' })
-vim.api.nvim_set_hl(0, 'WinSeparator', { fg = 'dimgray', bg = '' })
 
+-- UI highlight overrides
+vim.api.nvim_set_hl(0, 'TermCursor', { fg = '#8ba4b0', bg = '#8ba4b0' })
+vim.api.nvim_set_hl(0, 'WinSeparator', { fg = '#1c1e25', bg = 'NONE' })
+vim.api.nvim_set_hl(0, 'FloatBorder', { link = 'Comment' })
+vim.api.nvim_set_hl(0, 'NormalFloat', { link = 'Normal' })
