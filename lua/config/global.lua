@@ -1,21 +1,18 @@
 -- global options
 
-local animals = require('misc.style').animals
-
 DefaultConcealLevel = 0
 FullConcealLevel = 3
 
 -- proper colors
 vim.opt.termguicolors = true
 
--- show insert mode in terminal buffers
-vim.api.nvim_set_hl(0, 'TermCursor', { fg = '#A6E3A1', bg = '#A6E3A1' })
-
 -- disable fill chars (the ~ after the buffer)
 vim.o.fillchars = 'eob: '
 
 -- more opinionated
 vim.opt.number = true -- show linenumbers
+vim.opt.relativenumber = true -- relative line numbers for easy jumps
+vim.opt.cursorline = true -- highlight current line
 vim.opt.mouse = 'a' -- enable mouse
 vim.opt.mousefocus = true
 vim.opt.clipboard:append 'unnamedplus' -- use system clipboard
@@ -26,7 +23,7 @@ vim.opt.updatetime = 250 -- for autocommands and hovers
 -- don't ask about existing swap files
 vim.opt.shortmess:append 'A'
 
--- mode is already in statusline
+-- mode is already in statusline (lualine)
 vim.opt.showmode = false
 
 -- use less indentation
@@ -62,39 +59,14 @@ vim.opt.completeopt = 'menuone,noinsert'
 -- global statusline
 vim.opt.laststatus = 3
 
-vim.cmd [[
-let g:currentmode={
-       \ 'n'  : '%#String# NORMAL ',
-       \ 'v'  : '%#Search# VISUAL ',
-       \ 's'  : '%#ModeMsg# VISUAL ',
-       \ "\<C-V>" : '%#Title# V·Block ',
-       \ 'V'  : '%#IncSearch# V·Line ',
-       \ 'Rv' : '%#String# V·Replace ',
-       \ 'i'  : '%#ModeMsg# INSERT ',
-       \ 'R'  : '%#Substitute# R ',
-       \ 'c'  : '%#CurSearch# Command ',
-       \ 't'  : '%#ModeMsg# TERM ',
-       \}
-]]
-
-math.randomseed(os.time())
-local i = math.random(#animals)
-vim.opt.statusline = '%{%g:currentmode[mode()]%} %{%reg_recording()%} %* %t | %y | %* %= c:%c l:%l/%L %p%% %#NonText# '
-  .. animals[i]
-  .. ' %*'
-
--- hide cmdline when not used
-vim.opt.cmdheight = 1
-
 -- split right and below by default
 vim.opt.splitbelow = true
 vim.opt.splitright = true
 
---tabline
-vim.opt.showtabline = 1
+--tabline (managed by bufferline.nvim)
+vim.opt.showtabline = 2
 
---windowline
-vim.opt.winbar = '%f'
+--windowline (managed by dropbar.nvim, no default needed)
 
 -- don't continue comments automagically
 vim.opt.formatoptions:remove 'c'
@@ -119,9 +91,27 @@ vim.opt.conceallevel = DefaultConcealLevel
 
 -- diagnostics
 vim.diagnostic.config {
-  virtual_text = true,
+  virtual_text = {
+    prefix = '●',
+    spacing = 4,
+  },
   underline = true,
-  signs = true,
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = ' ',
+      [vim.diagnostic.severity.WARN] = ' ',
+      [vim.diagnostic.severity.INFO] = ' ',
+      [vim.diagnostic.severity.HINT] = ' ',
+    },
+  },
+  float = {
+    border = 'rounded',
+    source = true,
+    header = '',
+    prefix = '',
+  },
+  severity_sort = true,
+  update_in_insert = false,
 }
 
 -- add new filetypes
