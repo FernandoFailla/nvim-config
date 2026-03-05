@@ -38,13 +38,27 @@ return {
         preset = 'enter',
         ['<c-y>'] = { 'show_documentation', 'hide_documentation' },
         ['<c-k>'] = {},
+        ['<C-n>'] = { 'show', 'select_next', 'fallback' },
       },
       cmdline = {
         enabled = false,
       },
       sources = {
         default = { 'lazydev', 'lsp', 'path', 'references', 'git', 'snippets', 'buffer', 'emoji' },
+        per_filetype = {
+          r = { inherit_defaults = true, 'r_columns' },
+          rmd = { inherit_defaults = true, 'r_columns' },
+          rmarkdown = { inherit_defaults = true, 'r_columns' },
+          quarto = { inherit_defaults = true, 'r_columns' },
+        },
         providers = {
+          r_columns = {
+            name = 'R Columns',
+            module = 'blink-r-columns',
+            score_offset = 5,
+            async = true,
+            timeout_ms = 1000,
+          },
           emoji = {
             module = 'blink-emoji',
             name = 'Emoji',
@@ -80,15 +94,56 @@ return {
         -- Set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
         -- Adjusts spacing to ensure icons are aligned
         nerd_font_variant = 'mono',
+        kind_icons = {
+          Text = '󰉿',
+          Method = '󰊕',
+          Function = '󰊕',
+          Constructor = '󰒓',
+          Field = '󰜢',
+          Variable = '󰆦',
+          Property = '󰖷',
+          Class = '󱡠',
+          Interface = '󱡠',
+          Struct = '󱡠',
+          Module = '󰅩',
+          Unit = '󰪚',
+          Value = '󰦨',
+          Enum = '󰦨',
+          EnumMember = '󰦨',
+          Keyword = '󰻾',
+          Constant = '󰏿',
+          Snippet = '󱄽',
+          Color = '󰏘',
+          File = '󰈔',
+          Reference = '󰬲',
+          Folder = '󰉋',
+          Event = '󱐋',
+          Operator = '󰪚',
+          TypeParameter = '󰬛',
+        },
       },
       completion = {
         documentation = {
           auto_show = true,
           auto_show_delay_ms = 100,
           treesitter_highlighting = true,
+          window = {
+            border = 'rounded',
+          },
         },
         menu = {
           auto_show = true,
+          border = 'rounded',
+          draw = {
+            columns = {
+              { 'kind_icon' },
+              { 'label', 'label_description', gap = 1 },
+              { 'source_name' },
+            },
+          },
+        },
+        ghost_text = {
+          enabled = true,
         },
       },
       signature = { enabled = true },
