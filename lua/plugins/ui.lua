@@ -1,5 +1,161 @@
 return {
 
+  { -- noice: modern UI for cmdline, messages, notifications
+    'folke/noice.nvim',
+    enabled = true,
+    event = 'VeryLazy',
+    dependencies = {
+      'MunifTanjim/nui.nvim',
+    },
+    opts = {
+      cmdline = {
+        enabled = true,
+        view = 'cmdline_popup',
+        format = {
+          cmdline = { pattern = '^:', icon = ' ', lang = 'vim' },
+          search_down = { kind = 'search', pattern = '^/', icon = '  ', lang = 'regex' },
+          search_up = { kind = 'search', pattern = '^%?', icon = '  ', lang = 'regex' },
+          filter = { pattern = '^:%s*!', icon = ' $', lang = 'bash' },
+          lua = { pattern = { '^:%s*lua%s+', '^:%s*lua%s*=%s*', '^:%s*=%s*' }, icon = ' ', lang = 'lua' },
+          help = { pattern = '^:%s*he?l?p?%s+', icon = '󰋖 ' },
+        },
+      },
+      messages = {
+        enabled = true,
+        view = 'notify',
+        view_error = 'notify',
+        view_warn = 'notify',
+      },
+      popupmenu = {
+        enabled = true,
+        backend = 'nui',
+      },
+      lsp = {
+        override = {
+          ['vim.lsp.util.convert_input_to_markdown_lines'] = true,
+          ['vim.lsp.util.stylize_markdown'] = true,
+          ['cmp.entry.get_documentation'] = true,
+        },
+        hover = {
+          enabled = true,
+          silent = true,
+        },
+        signature = {
+          enabled = true,
+        },
+        progress = {
+          enabled = true,
+        },
+      },
+      presets = {
+        bottom_search = false,
+        command_palette = true,
+        long_message_to_split = true,
+        inc_rename = false,
+        lsp_doc_border = true,
+      },
+      routes = {
+        -- hide "written" messages
+        {
+          filter = {
+            event = 'msg_show',
+            kind = '',
+            find = 'written',
+          },
+          opts = { skip = true },
+        },
+        -- hide search count messages
+        {
+          filter = {
+            event = 'msg_show',
+            kind = 'search_count',
+          },
+          opts = { skip = true },
+        },
+      },
+      views = {
+        cmdline_popup = {
+          position = {
+            row = '40%',
+            col = '50%',
+          },
+          size = {
+            width = 60,
+            height = 'auto',
+          },
+          border = {
+            style = 'rounded',
+            padding = { 0, 1 },
+          },
+        },
+        popupmenu = {
+          relative = 'editor',
+          position = {
+            row = '45%',
+            col = '50%',
+          },
+          size = {
+            width = 60,
+            height = 10,
+          },
+          border = {
+            style = 'rounded',
+            padding = { 0, 1 },
+          },
+        },
+      },
+    },
+  },
+
+  { -- bufferline: beautiful tab bar
+    'akinsho/bufferline.nvim',
+    enabled = true,
+    event = 'VeryLazy',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    opts = {
+      options = {
+        mode = 'tabs',
+        themable = true,
+        numbers = 'none',
+        close_command = 'tabclose %d',
+        indicator = {
+          icon = '▎',
+          style = 'icon',
+        },
+        buffer_close_icon = '󰅖',
+        modified_icon = '● ',
+        close_icon = ' ',
+        left_trunc_marker = ' ',
+        right_trunc_marker = ' ',
+        max_name_length = 30,
+        max_prefix_length = 15,
+        tab_size = 20,
+        diagnostics = 'nvim_lsp',
+        diagnostics_update_in_insert = false,
+        diagnostics_indicator = function(count, level)
+          local icon = level:match 'error' and ' ' or ' '
+          return ' ' .. icon .. count
+        end,
+        separator_style = 'slant',
+        show_buffer_icons = true,
+        show_buffer_close_icons = true,
+        show_close_icon = false,
+        show_tab_indicators = true,
+        show_duplicate_prefix = true,
+        always_show_bufferline = false,
+        offsets = {
+          {
+            filetype = 'NvimTree',
+            text = ' File Explorer',
+            highlight = 'Directory',
+            separator = true,
+            text_align = 'left',
+          },
+        },
+      },
+    },
+  },
+
   ---@module "neominimap.config.meta"
   {
     'Isrothy/neominimap.nvim',
@@ -118,7 +274,18 @@ return {
           sorting_strategy = 'ascending',
           layout_config = {
             prompt_position = 'top',
+            horizontal = {
+              preview_width = 0.55,
+            },
+            flex = {
+              flip_columns = 120,
+            },
           },
+          prompt_prefix = '   ',
+          selection_caret = '  ',
+          entry_prefix = '  ',
+          borderchars = { '─', '│', '─', '│', '╭', '╮', '╯', '╰' },
+          winblend = 0,
           mappings = {
             i = {
               ['<C-u>'] = false,
@@ -191,35 +358,75 @@ return {
   },
 
   { -- statusline
-    -- PERF: I found this to slow down the editor
     'nvim-lualine/lualine.nvim',
-    enabled = false,
+    enabled = true,
+    event = 'VeryLazy',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
       local function macro_recording()
         local reg = vim.fn.reg_recording()
         if reg == '' then
           return ''
         end
-        return '📷[' .. reg .. ']'
+        return ' recording @' .. reg
+      end
+
+      local function lsp_name()
+        local clients = vim.lsp.get_clients { bufnr = 0 }
+        if #clients == 0 then
+          return ''
+        end
+        local names = {}
+        for _, client in ipairs(clients) do
+          table.insert(names, client.name)
+        end
+        return ' ' .. table.concat(names, ', ')
       end
 
       ---@diagnostic disable-next-line: undefined-field
       require('lualine').setup {
         options = {
-          section_separators = '',
-          component_separators = '',
+          theme = 'auto',
           globalstatus = true,
+          section_separators = { left = '', right = '' },
+          component_separators = { left = '', right = '' },
+          disabled_filetypes = {
+            statusline = { 'snacks_dashboard' },
+          },
         },
         sections = {
-          lualine_a = { 'mode', macro_recording },
-          lualine_b = { 'branch', 'diff', 'diagnostics' },
-          -- lualine_b = {},
-          lualine_c = { 'searchcount' },
-          lualine_x = { 'filetype' },
-          lualine_y = { 'progress' },
-          lualine_z = { 'location' },
+          lualine_a = { { 'mode', fmt = string.lower } },
+          lualine_b = {
+            { 'branch', icon = '' },
+            {
+              'diff',
+              symbols = { added = ' ', modified = ' ', removed = ' ' },
+            },
+          },
+          lualine_c = {
+            { 'filetype', icon_only = true, separator = '', padding = { left = 1, right = 0 } },
+            { 'filename', path = 1, symbols = { modified = ' ●', readonly = ' ', unnamed = '[No Name]' } },
+            { macro_recording },
+          },
+          lualine_x = {
+            {
+              'diagnostics',
+              symbols = { error = ' ', warn = ' ', info = ' ', hint = ' ' },
+            },
+            { lsp_name },
+          },
+          lualine_y = { 'fileformat', 'encoding' },
+          lualine_z = { 'location', 'progress' },
         },
-        extensions = { 'nvim-tree' },
+        inactive_sections = {
+          lualine_a = {},
+          lualine_b = {},
+          lualine_c = { { 'filename', path = 1 } },
+          lualine_x = { 'location' },
+          lualine_y = {},
+          lualine_z = {},
+        },
+        extensions = { 'nvim-tree', 'toggleterm', 'quickfix' },
       }
     end,
   },
@@ -242,7 +449,18 @@ return {
 
   { -- highlight occurences of current word
     'RRethy/vim-illuminate',
-    enabled = false,
+    enabled = true,
+    event = 'BufReadPost',
+    opts = {
+      delay = 200,
+      large_file_cutoff = 2000,
+      large_file_overrides = {
+        providers = { 'lsp' },
+      },
+    },
+    config = function(_, opts)
+      require('illuminate').configure(opts)
+    end,
   },
 
   {
@@ -276,6 +494,48 @@ return {
         },
         diagnostics = {
           enable = true,
+          icons = {
+            hint = ' ',
+            info = ' ',
+            warning = ' ',
+            error = ' ',
+          },
+        },
+        renderer = {
+          group_empty = true,
+          highlight_git = true,
+          indent_markers = {
+            enable = true,
+            icons = {
+              corner = '╰',
+              edge = '│',
+              item = '├',
+              none = ' ',
+            },
+          },
+          icons = {
+            show = {
+              file = true,
+              folder = true,
+              folder_arrow = true,
+              git = true,
+            },
+            glyphs = {
+              git = {
+                unstaged = '●',
+                staged = '✓',
+                unmerged = '',
+                renamed = '➜',
+                untracked = '★',
+                deleted = '',
+                ignored = '◌',
+              },
+            },
+          },
+        },
+        view = {
+          width = 35,
+          side = 'left',
         },
       }
     end,
@@ -301,8 +561,18 @@ return {
   {
     'folke/which-key.nvim',
     enabled = true,
+    event = 'VeryLazy',
     config = function()
-      require('which-key').setup {}
+      require('which-key').setup {
+        icons = {
+          breadcrumb = '  ',
+          separator = '  ',
+          group = ' ',
+        },
+        win = {
+          border = 'rounded',
+        },
+      }
       require 'config.keymap'
     end,
   },
@@ -346,6 +616,26 @@ return {
     opts = {
       open_mapping = [[<c-\>]],
       direction = 'float',
+      shade_terminals = false,
+      float_opts = {
+        border = 'rounded',
+        title_pos = 'center',
+      },
+      highlights = {
+        Normal = {
+          guibg = '#0d1117',
+        },
+        NormalFloat = {
+          guibg = '#0d1117',
+        },
+        FloatBorder = {
+          guifg = '#1c1e25',
+          guibg = '#0d1117',
+        },
+      },
+      on_open = function(term)
+        vim.wo[term.window].winbar = ''
+      end,
     },
   },
 
@@ -371,7 +661,7 @@ return {
     'MeanderingProgrammer/render-markdown.nvim',
     enabled = true,
     -- ft = {'quarto', 'markdown'},
-    ft = { 'markdown'},
+    ft = { 'markdown' },
     -- dependencies = { 'nvim-treesitter/nvim-treesitter' },
     -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' }, -- if you use standalone mini plugins
     dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
@@ -383,7 +673,10 @@ return {
         lsp = { enabled = false },
       },
       heading = {
-        enabled = false,
+        enabled = true,
+        sign = false,
+        icons = { '󰎤 ', '󰎧 ', '󰎪 ', '󰎭 ', '󰎱 ', '󰎳 ' },
+        width = 'full',
       },
       paragraph = {
         enabled = false,
@@ -393,7 +686,35 @@ return {
         style = 'full',
         border = 'thin',
         sign = false,
-        render_modes = { 'i', 'v', 'V' }
+        render_modes = { 'i', 'v', 'V' },
+        width = 'block',
+        left_pad = 2,
+        right_pad = 2,
+      },
+      dash = {
+        enabled = true,
+        icon = '─',
+        width = 'full',
+      },
+      bullet = {
+        enabled = true,
+        icons = { '●', '○', '◆', '◇' },
+      },
+      checkbox = {
+        enabled = true,
+        unchecked = { icon = ' ' },
+        checked = { icon = ' ' },
+        custom = {
+          todo = { raw = '[-]', rendered = '󰥔 ', highlight = 'RenderMarkdownTodo' },
+        },
+      },
+      pipe_table = {
+        enabled = true,
+        style = 'full',
+      },
+      link = {
+        enabled = true,
+        icon = ' ',
       },
       signs = {
         enabled = false,
@@ -432,7 +753,7 @@ return {
           markdown = {
             enabled = true,
             only_render_image_at_cursor = true,
-            only_render_image_at_cursor_mode = "popup",
+            only_render_image_at_cursor_mode = 'popup',
             filetypes = { 'markdown', 'vimwiki', 'quarto' },
           },
         },
