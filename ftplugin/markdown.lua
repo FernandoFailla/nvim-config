@@ -7,7 +7,6 @@ vim.wo.linebreak = true
 vim.wo.breakindent = true
 vim.wo.showbreak = '|'
 
-
 vim.api.nvim_create_autocmd('BufEnter', {
   desc = 'Automatically pull when entering a buffer in my ~/notes/ directory',
   pattern = vim.fn.expand '~' .. '/notes/*.md' .. ',' .. vim.fn.expand '~' .. '/notes/*.qmd',
@@ -20,7 +19,7 @@ vim.api.nvim_create_autocmd('BufEnter', {
           on_exit = function()
             vim.fn.jobstart('git commit -m "sync"', {
               on_exit = function()
-                print('git pulled')
+                print 'git pulled'
               end,
             })
           end,
@@ -42,7 +41,7 @@ vim.api.nvim_create_autocmd('BufWritePost', {
           on_exit = function()
             vim.fn.jobstart('git push', {
               on_exit = function()
-                print('git pushed')
+                print 'git pushed'
               end,
             })
           end,

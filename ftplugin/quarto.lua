@@ -27,4 +27,3 @@ vim.api.nvim_win_set_hl_ns(0, ns)
 vim.api.nvim_set_hl(0, '@markup.codecell', {
   link = 'CursorLine',
 })
-

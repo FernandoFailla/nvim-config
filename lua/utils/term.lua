@@ -124,7 +124,7 @@ M.send_visual = function()
   -- get the selected text
   vim.cmd.normal { '"zy', bang = true }
   local selection = vim.fn.getreg 'z'
-  M.send({ selection })
+  M.send { selection }
 end
 
 vim.keymap.set('v', '<CR>', function()
@@ -135,4 +135,3 @@ end, { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>ct', function()
   connect()
 end, { noremap = true, silent = true })
-

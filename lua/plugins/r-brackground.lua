@@ -1,13 +1,13 @@
-return{
+return {
   {
-  'FernandoFailla/r-background-jobs.nvim',
-  branch = "dags",
-  dependencies = {
-    'nvim-lua/plenary.nvim',
-    'nvim-telescope/telescope.nvim',  -- Optional
+    'FernandoFailla/r-background-jobs.nvim',
+    branch = 'dags',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'nvim-telescope/telescope.nvim', -- Optional
+    },
+    config = function()
+      require('r-background-jobs').setup()
+    end,
   },
-  config = function()
-    require('r-background-jobs').setup()
-  end
-}
 }

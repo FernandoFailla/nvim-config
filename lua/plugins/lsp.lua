@@ -60,7 +60,7 @@ return {
           'css-lsp',
           'emmet-ls',
           'html-lsp',
-          'sqlls'
+          'sqlls',
           -- 'julia-lsp'
           -- 'rust-analyzer',
           --'marksman',
@@ -225,7 +225,16 @@ return {
       vim.lsp.config.lua_ls = {
         cmd = { 'lua-language-server' },
         filetypes = { 'lua' },
-        root_markers = { '.luarc.json', '.luarc.jsonc', '.luacheckrc', '.stylua.toml', 'stylua.toml', 'selene.toml', 'selene.yml', '.git' },
+        root_markers = {
+          '.luarc.json',
+          '.luarc.jsonc',
+          '.luacheckrc',
+          '.stylua.toml',
+          'stylua.toml',
+          'selene.toml',
+          'selene.yml',
+          '.git',
+        },
         capabilities = capabilities,
         settings = {
           Lua = {
@@ -287,7 +296,15 @@ return {
       vim.lsp.config.clangd = {
         cmd = { 'clangd' },
         filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'proto' },
-        root_markers = { '.clangd', '.clang-tidy', '.clang-format', 'compile_commands.json', 'compile_flags.txt', 'configure.ac', '.git' },
+        root_markers = {
+          '.clangd',
+          '.clang-tidy',
+          '.clang-format',
+          'compile_commands.json',
+          'compile_flags.txt',
+          'configure.ac',
+          '.git',
+        },
         capabilities = capabilities,
       }
 

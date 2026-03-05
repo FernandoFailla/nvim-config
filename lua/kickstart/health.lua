@@ -79,7 +79,7 @@ local check_image_dependencies = function()
 
   if backend == 'kitty' then
     -- check if kitty is available
-    print('kitty')
+    print 'kitty'
     local out = shell { 'kitty', '--version' }
     if out == nil then
       vim.health.warn 'kitty is not available'
