@@ -140,7 +140,7 @@ return {
       vim.g.molten_image_provider = 'image.nvim'
       -- vim.g.molten_output_win_max_height = 20
       vim.g.molten_auto_open_output = true
-      vim.g.molten_auto_open_html_in_browser = true
+      vim.g.molten_auto_open_html_in_browser = false
       vim.g.molten_tick_rate = 200
       vim.g.molten_output_win_max_height = 600
       vim.g.molten_output_win_max_width = 600
